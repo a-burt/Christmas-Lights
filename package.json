@@ -1,0 +1,17 @@
+{
+    "name": "christmas_lights",
+    "version": "0.1.0",
+    "description": "Tessel project",
+    "main": "controller.js",
+    "dependencies": {},
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": "www.github.com/tessel/t2-cli",
+    "keywords": [
+    "Tessel"
+  ],
+    "license": "MIT",
+    "readme": "A controller for Christmas Lights through an interactive web page"
+}

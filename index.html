@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+   <meta charset="utf-8">
+   <title>Light Controller</title>
+   <link rel='stylesheet' href="stylesheet.css">
+</head>
+<body>
+   <h1>Light Controller</h1>
+   <div>
+      <button id="alloff">All Off</button>
+      <button id="load">Load Preset</button>
+      <button id="save">Save Settings</button>
+   </div>
+   <div id="flex">
+      <div class="lightcontrol">
+         <h2>Light 1</h2>
+         <span class="label">Off</span>
+         <input id="lightOne" type="range" min='0' max='255' value='0' step='1'>
+         <span class="label">Brightest</span>
+      </div>
+      <div class="lightcontrol">
+         <h2>Light 2</h2>
+         <span class="label">Off</span>
+         <input id="lightTwo" type="range" min='0' max='255' value='0' step='1'>
+         <span class="label">Brightest</span>
+      </div>
+      <div class="lightcontrol">
+         <h2>Light 3</h2>
+         <span class="label">Off</span>
+         <input id="lightThree" type="range" min='0' max='255' value='0' step='1'>
+         <span class="label">Brightest</span>
+      </div>
+      <div class="lightcontrol">
+         <h2>Light 4</h2>
+         <span class="label">Off</span>
+         <input id="lightFour" type="range" min='0' max='255' value='0' step='1'>
+         <span class="label">Brightest</span>
+      </div>
+      <div class="lightcontrol">
+         <h2>Light 5</h2>
+         <span class="label">Off</span>
+         <input id="lightFive" type="range" min='0' max='255' value='0' step='1'>
+         <span class="label">Brightest</span>
+      </div>
+      <div class="lightcontrol">
+         <h2>Light 6</h2>
+         <span class="label">Off</span>
+         <input id="lightSix" type="range" min='0' max='255' value='0' step='1'>
+         <span class="label">Brightest</span>
+      </div>
+   </div>
+
+   <script src="/socket.io/socket.io.js"></script>
+
+   <script>
+
+      var lightOne = document.getElementById("lightOne");
+      var lightTwo = document.getElementById("lightTwo");
+      var lightThree = document.getElementById("lightThree");
+      var lightFour = document.getElementById("lightFour");
+      var lightFive = document.getElementById("lightFive");
+      var lightSix = document.getElementById("lightSix");
+
+      document.getElementById("load").addEventListener("click", loadValues);
+      document.getElementById("save").addEventListener("click", saveValues);
+
+
+      function loadValues() {
+         if (localStorage.getItem("lightOne")) {
+            var inputEvent = new Event ('input', {
+               'bubbles': true,
+               'cancelable': true
+            });
+            lightOne.value = parseInt(localStorage.getItem("lightOne"));
+            lightOne.dispatchEvent(inputEvent);
+            lightTwo.value = parseInt(localStorage.getItem("lightTwo"));
+            lightTwo.dispatchEvent(inputEvent);
+            lightThree.value = parseInt(localStorage.getItem("lightThree"));
+            lightThree.dispatchEvent(inputEvent);
+            lightFour.value = parseInt(localStorage.getItem("lightFour"));
+            lightFour.dispatchEvent(inputEvent);
+            lightFive.value = parseInt(localStorage.getItem("lightFive"));
+            lightFive.dispatchEvent(inputEvent);
+            lightSix.value = parseInt(localStorage.getItem("lightSix"));
+            lightSix.dispatchEvent(inputEvent);
+         }
+      }
+
+      function saveValues() {
+         localStorage.setItem("lightOne", lightOne.value);
+         localStorage.setItem("lightTwo", lightTwo.value);
+         localStorage.setItem("lightThree", lightThree.value);
+         localStorage.setItem("lightFour", lightFour.value);
+         localStorage.setItem("lightFive", lightFive.value);
+         localStorage.setItem("lightSix", lightSix.value);
+      }
+
+      var socket = io.connect(window.location.hostname + ":" + 80);
+
+      function emitChange(e) {
+         socket.emit("levelChange", {light: e.target.id, level: e.target.value});
+      }
+
+      function emitOff(e) {
+         socket.emit("allOff", {});
+      }
+
+      document.getElementById('alloff').addEventListener('click', emitOff);
+
+      lightOne.addEventListener('input', emitChange);
+      lightTwo.addEventListener('input', emitChange);
+      lightThree.addEventListener('input', emitChange);
+      lightFour.addEventListener('input', emitChange);
+      lightFive.addEventListener('input', emitChange);
+      lightSix.addEventListener('input', emitChange);
+
+      socket.on('setValue', function(data) {
+         lightOne.value = parseInt(data.lightOne);
+         lightTwo.value = parseInt(data.lightTwo);
+         lightThree.value = parseInt(data.lightThree);
+         lightFour.value = parseInt(data.lightFour);
+         lightFive.value = parseInt(data.lightFive);
+         lightSix.value = parseInt(data.lightSix);
+      });
+   </script>
+</body>
+</html>
